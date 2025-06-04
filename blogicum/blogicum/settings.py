@@ -11,10 +11,18 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+CERTIFICATE_DOWNLOAD_URL = "https://storage.yandexcloud.net/cloud-certs/CA.pem"
+CERTIFICATE_LOCAL_FILENAME = "root.crt"
+CERTIFICATE_SAVE_PATH = BASE_DIR / CERTIFICATE_LOCAL_FILENAME
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -82,12 +90,19 @@ WSGI_APPLICATION = 'blogicum.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT', '6432'),
+        'OPTIONS': {
+            'sslmode': 'verify-full',
+            'sslrootcert': 'root.crt',
+            'target_session_attrs': 'read-write',
+        }
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

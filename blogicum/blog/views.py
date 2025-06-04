@@ -52,7 +52,7 @@ class PostListView(ListView):
                                    pub_date__lte=timezone.now()
                                    ).annotate(comment_count=Count("comments"))
     ordering = '-pub_date'
-    paginate_by = 10
+    paginate_by = 15
 
 
 class PostDetailView(DetailView):
