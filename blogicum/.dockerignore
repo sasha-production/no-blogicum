@@ -1,0 +1,12 @@
+.git
+.venv
+.env
+__pycache__
+*.sqlite3
+*.pyc
+*.pyo
+*.pyd
+db.json
+media/          # Медиа-файлы (храним на хосте или в Object Storage)
+static_dev/     # Исходники статики (уже собраны в staticfiles)
+staticfiles/

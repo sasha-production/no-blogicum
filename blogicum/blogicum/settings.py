@@ -28,14 +28,16 @@ CERTIFICATE_SAVE_PATH = BASE_DIR / CERTIFICATE_LOCAL_FILENAME
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i%-(o1m9=6_x5ihn%_qem-#$j94-87m6a+qq0k&@6evuxq@(2+'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
+    '*'
+#    '158.160.146.38'
+#    'localhost',
+#    '127.0.0.1',
 ]
 
 
@@ -138,6 +140,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATIC_URL = '/static/'
 
@@ -161,3 +164,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=11111000',  # Кэш
+    'ContentDisposition': 'inline',
+}
+MEDIA_URL = 'https://storage.yandexcloud.net/blogicum-bucket/media/'
+STATIC_URL = 'https://storage.yandexcloud.net/blogicum-bucket/static/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'blogicum-bucket'  # Имя бакета
+AWS_S3_ENDPOINT_URL = 'https://storage.yandexcloud.net'
+AWS_S3_REGION_NAME = 'ru-central1'  # Регион бакета
+AWS_DEFAULT_ACL = 'public-read'  # Если файлы должны быть публичными
+AWS_QUERYSTRING_AUTH = False  # Отключает подписанные URL (если не нужны)
